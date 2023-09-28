@@ -4,11 +4,11 @@ const twilioPhoneNumber=process.env.TWILIO_PHONE_NUMBER
 const twilio=require('twilio')(accountSid,authToken)
 exports.sms=(req,res)=>{
     try{
-      
+      const to=req.body.phonenumber
         twilio.messages.create({
             body:'hello,this is a test message',
             from :twilioPhoneNumber,
-            to:'+917248929926'
+            to:to
 
 
         })
@@ -24,13 +24,13 @@ exports.sms=(req,res)=>{
 
 exports.call=async (req, res) => {
   try {
-    const { to } = req.body;
+    const to = req.body.phonenumber;
 
     // Send a call using Twilio
     const call =await twilio.calls.create({
       url: 'http://demo.twilio.com/docs/voice.xml', // Replace with a TwiML URL or a TwiML document
       from: twilioPhoneNumber,
-      to: '+917248929926',
+      to:to,
     });
 
     // Respond with success status
@@ -47,12 +47,12 @@ exports.call=async (req, res) => {
 
 exports.whatsappsms=async (req, res) => {
   try {
- 
+ const to=req.body.phonenumber
     // Send a WhatsApp message using Twilio
     const message=await twilio.messages.create({
       body: 'Hello, this is a test WhatsApp message!',
       from:`whatsapp:+14155238886`, // Use the WhatsApp-enabled Twilio number
-      to:'whatsapp:+919130079926'
+      to:`whatsapp:${to}`
     });
 
     // Respond with success status

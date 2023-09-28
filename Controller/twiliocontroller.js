@@ -5,6 +5,9 @@ const twilio=require('twilio')(accountSid,authToken)
 exports.sms=(req,res)=>{
     try{
       const to=req.body.phonenumber
+      if(to.length<10){
+        res.status(400).json({error:'Bad-request-invalid phone number'})
+      }
         twilio.messages.create({
             body:'hello,this is a test message',
             from :twilioPhoneNumber,
@@ -25,6 +28,9 @@ exports.sms=(req,res)=>{
 exports.call=async (req, res) => {
   try {
     const to = req.body.phonenumber;
+    if(to.length<10){
+      res.status(400).json({error:'Bad-request-invalid phone number'})
+    }
 
     // Send a call using Twilio
     const call =await twilio.calls.create({
@@ -48,14 +54,17 @@ exports.call=async (req, res) => {
 exports.whatsappsms=async (req, res) => {
   try {
  const to=req.body.phonenumber
-    // Send a WhatsApp message using Twilio
+ if(to.length<10){
+  res.status(400).json({error:'Bad-request-invalid phone number'})
+}
+    
     const message=await twilio.messages.create({
       body: 'Hello, this is a test WhatsApp message!',
       from:`whatsapp:+14155238886`, // Use the WhatsApp-enabled Twilio number
       to:`whatsapp:${to}`
     });
 
-    // Respond with success status
+    // Respond success status
     res.status(200).json({ message: 'WhatsApp message sent successfully', messageId: message.sid });
   } catch (error) {
     console.error(error);
